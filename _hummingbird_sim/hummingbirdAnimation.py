@@ -6,12 +6,16 @@ import numpy as np
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 import pyqtgraph.Vector as Vector
-
+from PyQt6.QtWidgets import QPushButton, QWidget, QVBoxLayout # for exit button attached to main window
+import hummingbirdParam as P
 
 class HummingbirdAnimation:
     def __init__(self):
-        # initialize Qt gui application and window
+        # initialize Qt gui application, widget (to combine button + window) and window
         self.app = pg.QtWidgets.QApplication([])  # initialize QT
+        self.main_widget = QWidget()  # Main container widget
+        self.main_widget.setWindowTitle('Hummingbird Viewer')
+        self.main_widget.setGeometry(800, 200, 700, 700)
         self.window = gl.GLViewWidget()  # initialize the view object
         self.window.setWindowTitle('Hummingbird Viewer')
         # args: upper_left_x, upper_right_y, width, height
@@ -27,6 +31,22 @@ class HummingbirdAnimation:
         self.window.raise_()  # bring window to the front
         self.plot_initialized = False  # has the mav been plotted yet?
         self.vtol_plot = []
+
+        # button for closing window/application and exiting program
+        self.close_button = QPushButton('Exit Simulation')
+        self.close_button.clicked.connect(self.close_window)
+
+        # add button to window
+        layout = QVBoxLayout()
+        layout.addWidget(self.window)
+        layout.addWidget(self.close_button)
+        self.main_widget.setLayout(layout)
+        self.main_widget.show()
+
+    def close_window(self):
+        self.window.close() 
+        self.app.quit()
+        exit(0)
 
     def update(self, t: float, state: np.ndarray):
         # initialize the drawing the first time update() is called
