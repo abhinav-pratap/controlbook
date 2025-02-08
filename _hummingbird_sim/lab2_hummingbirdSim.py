@@ -17,9 +17,9 @@ animation = HummingbirdAnimation()
 t = P.t_start  # time starts at t_start
 while t < P.t_end:  # main simulation loop
     # set variables
-    phi = phi_ref.sin(t)
-    theta = 0#theta_ref.sin(t)
-    psi = 0#psi_ref.sin(t)
+    phi = 1 # 1 # 0
+    theta = 0 # 1 # -1
+    psi = 0 # 1 # -1
     # update animation
     state = np.array([[phi], [theta], [psi], [0.0], [0.0], [0.0]])
     ref = np.array([[0], [0], [0]])

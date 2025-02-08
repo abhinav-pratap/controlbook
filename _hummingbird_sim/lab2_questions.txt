@@ -1,0 +1,4 @@
+1. chapter read ✅
+2a. positive roll: the m1 part of the hummingbird rotates counterclockwise (when viewing from startup camera angle of sim)
+2b. positive pitch: the m2 part (and m1 part since its attached to m2) of the hummingbird rotates upwards
+2c. positive yaw: the m3 part (and m1 & m2 since they're attached to m3) of the hummingbird moves clockwise (when viewing from startup camera angle of sim)
