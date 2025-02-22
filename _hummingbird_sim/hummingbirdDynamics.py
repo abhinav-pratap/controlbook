@@ -171,11 +171,19 @@ class HummingbirdDynamics:
         """
         # FIXME Fill in this function
         #extract any necessary variables from the state
+        phi = state[0][0]
+        theta = state[1][0]
+        psi = state[2][0]
+        phidot = state[3][0]
+        thetadot = state[4][0]
+        psidot = state[5][0]
+
+
 
         # Return the tau matrix
-        return np.array([[],
-                        [],
-                        []])
+        return np.array([[torque],
+                        [P.ellT * force * np.cos(phi)],
+                        [ P.ellT*force*np.cos(theta)*np.sin(phi) - torque*np.sin(theta) ]])
     
     def _B(self):
         # FIXME Fill in this function
