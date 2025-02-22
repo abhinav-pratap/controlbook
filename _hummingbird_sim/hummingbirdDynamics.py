@@ -139,11 +139,18 @@ class HummingbirdDynamics:
     def _partialP(self, state: np.ndarray):
         # FIXME Fill in this function
         #extact any necessary variables from the state
+        phi = state[0][0]
+        theta = state[1][0]
+        psi = state[2][0]
+        phidot = state[3][0]
+        thetadot = state[4][0]
+        psidot = state[5][0]
+
 
         # Return the partialP array
-        return np.array([[],
-                        [],
-                        [],
+        return np.array([[0],
+                        [(P.m1*P.ell1 + P.m2*P.ell2)*P.g*np.cos(theta)],
+                        [0],
                         ])
     
     def _tau(self, state: np.ndarray, force: float, torque: float):
