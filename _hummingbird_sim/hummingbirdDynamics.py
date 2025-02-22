@@ -188,6 +188,8 @@ class HummingbirdDynamics:
     def _B(self):
         # FIXME Fill in this function
         # This needs no variables from the state
+
+        B = 0.001 * np.identity(3)
         
         # Return the B matrix
         return B
