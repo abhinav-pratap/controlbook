@@ -81,9 +81,9 @@ class HummingbirdDynamics:
     def h(self):
         # FIXME Fill in this function
         # return y = h(x)
-        phi = 
-        theta = 
-        psi = 
+        phi = self.state[0][0]
+        theta = self.state[1][0]
+        psi = self.state[2][0]
         y = np.array([[phi], [theta], [psi]])
         return y
 
@@ -105,23 +105,31 @@ class HummingbirdDynamics:
         psidot = state[5][0]
 
         # Fill out M22, M23, and M33
-        M22 = 
-        M23 = 
-        M33 = 
+        M22 = P.m1*P.ell1**2 + P.m2*P.ell2**2 + P.J2y + P.J1y*np.cos(phi)**2 + P.J1z*np.sin(phi)**2
+        M23 = (P.J1y - P.J1z) * np.sin(phi) * np.cos(phi) * np.cos(theta)
+        M33 = (P.m1*P.ell1**2 + P.m2*P.ell2**2 + P.J2z + P.J1y*np.sin(phi)**2 + P.J1z*np.cos(phi)**2) * np.cos(theta)**2 + (P.J1x + P.J2x)*np.sin(theta)**2 + P.m3*(P.ell3x**2 + P.ell3y**2) + P.J3z
 
         # Return the M matrix
-        return np.array([[, , ],
-                      [, , ],
-                      [, , ]
+        return np.array([[P.J1x, 0, -P.J1x*np.sin(theta)],
+                      [0, M22, M23],
+                      [-P.J1x*np.sin(theta), M23, M33]
                       ])
 
     def _C(self, state: np.ndarray):
         # FIXME Fill in this function
         #extact any necessary variables from the state
+        phi = state[0][0]
+        theta = state[1][0]
+        psi = state[2][0]
+        phidot = state[3][0]
+        thetadot = state[4][0]
+        psidot = state[5][0]
+
+        N33 = 2*(P.J1x + P.J2x - P.m1*P.ell1**2 - P.m2*P.ell2**2 - P.J2z - P.J1y*np.sin(phi)**2 - P.J1z*np.cos(phi)**2)*np.sin(theta)*np.cos(theta)
 
         # Return the C matrix
-        return np.array([[],
-                [],
+        return np.array([[(P.J1y - P.J1z)*np.sin(phi)*np.cos(phi)*(thetadot**2 - np.cos(theta)*phidot**2) + ((P.J1y - P.J1z) * (np.cos(phi)**2 - np.sin(phi)**2) - P.J1x) * np.cos(theta)*thetadot*psidot],
+                [2(P.J1z - P.J1y)*np.sin(phi)*np.cos(phi)*phidot*thetadot + ((P.J1y - P.J1z) * (np.cos(phi)**2 - np.sin(phi)**2) + P.J1x)*np.cos(theta)*phidot*psidot - 0.5*N33*psidot**2],
                 [],
                 ])
         
