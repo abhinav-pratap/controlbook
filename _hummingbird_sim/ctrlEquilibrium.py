@@ -6,14 +6,17 @@ class ctrlEquilibrium:
         pass 
 
     def update(self, x):
-        theta = 
-        thetadot = 
+        theta = x[1][0]
+        thetadot = x[4][0]
         
-        force_equilibrium = 
+        force_equilibrium = (P.m1*P.ell1 + P.m2*P.ell2)*P.g/P.ellT
         force = force_equilibrium
         torque = 0.
         # convert force and torque to pwm signals
-        pwm = 
+        pwm = np.array([
+            [(0.5 * (1/P.km)) * (force + torque/P.d)],
+            [(0.5 * (1/P.km)) * (force - torque/P.d)]
+        ])
         pwm = saturate(pwm, 0, 1) 
         return pwm
 

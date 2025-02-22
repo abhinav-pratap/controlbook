@@ -1,5 +1,6 @@
 import numpy as np 
 import hummingbirdParam as P
+from math import sin, cos
 
 
 class HummingbirdDynamics:
@@ -105,15 +106,16 @@ class HummingbirdDynamics:
         psidot = state[5][0]
 
         # Fill out M22, M23, and M33
-        M22 = P.m1*P.ell1**2 + P.m2*P.ell2**2 + P.J2y + P.J1y*np.cos(phi)**2 + P.J1z*np.sin(phi)**2
-        M23 = (P.J1y - P.J1z) * np.sin(phi) * np.cos(phi) * np.cos(theta)
-        M33 = (P.m1*P.ell1**2 + P.m2*P.ell2**2 + P.J2z + P.J1y*np.sin(phi)**2 + P.J1z*np.cos(phi)**2) * np.cos(theta)**2 + (P.J1x + P.J2x)*np.sin(theta)**2 + P.m3*(P.ell3x**2 + P.ell3y**2) + P.J3z
+        M22 = P.m1*P.ell1**2 + P.m2*P.ell2**2 + P.J2y + P.J1y*cos(phi)**2 + P.J1z*sin(phi)**2
+        M23 = (P.J1y - P.J1z) * sin(phi) * cos(phi) * cos(theta)
+        M33 = (P.m1*P.ell1**2 + P.m2*P.ell2**2 + P.J2z + P.J1y*sin(phi)**2 + P.J1z*cos(phi)**2) * cos(theta)**2 + (P.J1x + P.J2x)*sin(theta)**2 + P.m3*(P.ell3x**2 + P.ell3y**2) + P.J3z
 
         # Return the M matrix
-        return np.array([[P.J1x, 0, -P.J1x*np.sin(theta)],
-                      [0, M22, M23],
-                      [-P.J1x*np.sin(theta), M23, M33]
-                      ])
+        return np.array([
+            [P.J1x, 0, -P.J1x*sin(theta)],
+            [0, M22, M23],
+            [-P.J1x*sin(theta), M23, M33]
+        ])
 
     def _C(self, state: np.ndarray):
         # FIXME Fill in this function
@@ -125,15 +127,16 @@ class HummingbirdDynamics:
         thetadot = state[4][0]
         psidot = state[5][0]
 
-        N33 = 2*(P.J1x + P.J2x - P.m1*P.ell1**2 - P.m2*P.ell2**2 - P.J2z - P.J1y*np.sin(phi)**2 - P.J1z*np.cos(phi)**2)*np.sin(theta)*np.cos(theta)
+        N33 = 2*(P.J1x + P.J2x - P.m1*P.ell1**2 - P.m2*P.ell2**2 - P.J2z - P.J1y*sin(phi)**2 - P.J1z*cos(phi)**2)*sin(theta)*cos(theta)
 
         # Return the C matrix
-        return np.array([[(P.J1y - P.J1z)*np.sin(phi)*np.cos(phi)*(thetadot**2 - np.cos(theta)*phidot**2) + ((P.J1y - P.J1z) * (np.cos(phi)**2 - np.sin(phi)**2) - P.J1x) * np.cos(theta)*thetadot*psidot],
-                [2(P.J1z - P.J1y)*np.sin(phi)*np.cos(phi)*phidot*thetadot + ((P.J1y - P.J1z) * (np.cos(phi)**2 - np.sin(phi)**2) + P.J1x)*np.cos(theta)*phidot*psidot - 0.5*N33*psidot**2],
-                [thetadot*(P.J1z - P.J1y)*np.sin(phi)*np.cos(phi)*np.sin(theta) 
-                 + ((P.J1y - P.J1z) * (np.cos(phi)**2 - np.sin(phi)**2) - P.J1x)*np.cos(theta)*phidot*thetadot
-                 + (P.J1z - P.J1y)*np.sin(phi)*np.cos(phi)*np.sin(theta)*thetadot**2 + 2(P.J1y - P.J1z)*np.sin(phi)*np.cos(phi)*phidot*psidot
-                 + 2(-P.m1*P.ell1**2 - P.m2*P.ell2**2 - P.J2z + P.J1x + P.J2x + P.J1y*np.sin(phi)**2 + np.J1z*np.sin(phi)**2)*np.sin(theta)*np.cos(theta)*thetadot*psidot],
+        return np.array([
+            [(P.J1y - P.J1z)*sin(phi)*cos(phi)*(thetadot**2 - (cos(theta)**2)*(phidot**2)) + ((P.J1y - P.J1z) * (cos(phi)**2 - sin(phi)**2) - P.J1x) * cos(theta)*thetadot*psidot],
+                [(2*(P.J1z - P.J1y)*sin(phi)*cos(phi)*phidot*thetadot) + (((P.J1y - P.J1z) * (cos(phi)**2 - sin(phi)**2) + P.J1x)*cos(theta)*phidot*psidot) - (0.5*N33*(psidot**2))],
+                [(thetadot**2)*(P.J1z - P.J1y)*sin(phi)*cos(phi)*sin(theta) 
+                 + ((P.J1y - P.J1z) * (cos(phi)**2 - sin(phi)**2) - P.J1x)*cos(theta)*phidot*thetadot
+                 + (P.J1z - P.J1y)*sin(phi)*cos(phi)*sin(theta)*thetadot**2 + 2*(P.J1y - P.J1z)*sin(phi)*cos(phi)*phidot*psidot
+                 + 2*(-P.m1*P.ell1**2 - P.m2*P.ell2**2 - P.J2z + P.J1x + P.J2x + P.J1y*sin(phi)**2 + P.J1z*sin(phi)**2)*sin(theta)*cos(theta)*thetadot*psidot],
                 ])
         
     def _partialP(self, state: np.ndarray):
@@ -149,7 +152,7 @@ class HummingbirdDynamics:
 
         # Return the partialP array
         return np.array([[0],
-                        [(P.m1*P.ell1 + P.m2*P.ell2)*P.g*np.cos(theta)],
+                        [(P.m1*P.ell1 + P.m2*P.ell2)*P.g*cos(theta)],
                         [0],
                         ])
     
@@ -182,8 +185,8 @@ class HummingbirdDynamics:
 
         # Return the tau matrix
         return np.array([[torque],
-                        [P.ellT * force * np.cos(phi)],
-                        [ P.ellT*force*np.cos(theta)*np.sin(phi) - torque*np.sin(theta) ]])
+                        [P.ellT * force * cos(phi)],
+                        [ P.ellT*force*cos(theta)*sin(phi) - torque*sin(theta) ]])
     
     def _B(self):
         # FIXME Fill in this function
