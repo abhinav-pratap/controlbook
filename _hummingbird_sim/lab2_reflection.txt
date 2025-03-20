@@ -1,0 +1,1 @@
+It was really cool to see how everything was put together in this lab. I felt I learned what it actually means to use a controller, pipe that into a plant, and then see what happens. Gave me something tangible.
