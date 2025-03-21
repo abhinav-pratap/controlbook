@@ -17,7 +17,7 @@ dataPlot = DataPlotter()
 animation = HummingbirdAnimation()
 
 t = P.t_start  # time starts at t_start
-y = hummingbird.h()
+y = hummingbird.state
 while t < P.t_end:  # main simulation loop
 
     # Propagate dynamics at rate Ts
@@ -25,7 +25,8 @@ while t < P.t_end:  # main simulation loop
     while t < t_next_plot:
         r = np.array([[theta_ref.square(t)], [0.]])
         u, y_ref = controller.update(r, y)
-        y = hummingbird.update(u)  # Propagate the dynamics
+        hummingbird.update(u)  # Propagate the dynamics
+        y = hummingbird.state
         t += P.Ts  # advance time by Ts
 
     # update animation and data plots at rate t_plot
