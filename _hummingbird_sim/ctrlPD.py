@@ -48,7 +48,7 @@ class ctrlPD:
         J_T = P.m1 * P.ell1**2 + P.m2 * P.ell2**2 + P.J2z + P.m3 * (P.ell3x**2 + P.ell3y**2)
         b_psi = P.ellT * f_e / (J_T + P.J1z)
 
-        M = 7
+        M = 6
         tr_yaw = M * tr_roll
         zeta_yaw = 0.707
         wn_yaw = 0.5 * np.pi / tr_yaw / np.sqrt(1 - zeta_yaw**2)
