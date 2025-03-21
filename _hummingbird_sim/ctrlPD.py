@@ -35,8 +35,8 @@ class ctrlPD:
         ######
         # Lateral controller gains 
         ######
-        tr_roll = 1.0
-        zeta_roll = 0.8
+        tr_roll = 0.9
+        zeta_roll = 0.707
         wn_roll = 0.5 * np.pi / tr_roll / np.sqrt(1 - zeta_roll**2)
         self.kp_roll = wn_roll**2 * P.J1x
         self.kd_roll = 2 * zeta_roll * wn_roll * P.J1x
