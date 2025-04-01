@@ -7,7 +7,7 @@ from dataPlotter import dataPlotter
 from blockbeamDynamics import blockbeamDynamics
 from ctrlPd import ctrlPD
 
-r_plot = signalGenerator(amplitude=0.15, frequency=.01, y_offset=0.25)
+r_plot = signalGenerator(amplitude=0.15, frequency=.05, y_offset=0.25)
 dynamics = blockbeamDynamics()
 
 data_plot = dataPlotter()
@@ -16,16 +16,18 @@ controller = ctrlPD()
 t = P.t_start
 
 while t < P.t_end:
-    r = r_plot.square(t)
-    x = dynamics.state
-    u = controller.update(r, x)
-    state = dynamics.update(u)
+    t_next_plot = t + P.t_plot
+    while t < t_next_plot:
+        r = r_plot.square(t)
+        x = dynamics.state
+        u = controller.update(r, x)
+        state = dynamics.update(u)
+        t += P.Ts
 
-    animation.update(state)
+    animation.update(dynamics.state)
     data_plot.update(t, dynamics.state, u, r)
 
-    t += P.t_plot  # advance time by t_plot
-    plt.pause(0.05)
+    plt.pause(0.0001)
 
 plt.waitforbuttonpress()
 plt.close()
