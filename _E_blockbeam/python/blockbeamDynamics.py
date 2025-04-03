@@ -16,6 +16,10 @@ class blockbeamDynamics:
         self.m1 = P.m1 * (1.+alpha*(2.*np.random.rand()-1.))
         self.m2 = P.m2 * (1.+alpha*(2.*np.random.rand()-1.))
         self.length = P.length * (1.+alpha*(2.*np.random.rand()-1.))
+
+        P.m1 = self.m1
+        P.m2 = self.m2
+        P.length = self.length
         
  
     def update(self, u: float):
