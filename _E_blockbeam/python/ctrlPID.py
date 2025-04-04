@@ -14,7 +14,7 @@ class ctrlPID:
 
         self.kd_theta = 2 * zeta_theta * w_n_theta * b / P.length
         self.kp_theta = w_n_theta**2 * b / P.length
-        self.ki_theta = 0.0
+        self.ki_theta = 0.
 
         # PD gains
         print('kp_theta: ', self.kp_theta)
@@ -27,7 +27,7 @@ class ctrlPID:
 
         self.kd_z = - 2 * zeta_z * w_n_z / P.g
         self.kp_z = - w_n_z**2 / P.g
-        self.ki_z = 0.0
+        self.ki_z = -0.013
         # PD gains
         print('kp_z: ', self.kp_z)
         print('kd_z: ', self.kd_z)
