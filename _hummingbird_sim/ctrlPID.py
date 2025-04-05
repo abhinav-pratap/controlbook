@@ -95,7 +95,7 @@ class ctrlPID:
         self.integrator_theta += (P.Ts / 2) * (error_theta + self.error_theta_d1)
 
         force_unsat = self.kp_pitch * error_theta - self.kd_pitch * self.theta_dot + self.ki_pitch * self.integrator_theta
-        force = saturate(force_unsat + force_equilibrium - d, -P.force_max, P.force_max)
+        force = saturate(force_unsat + force_equilibrium + d, -P.force_max, P.force_max)
 
         # lateral control
         # outer loop / yaw
