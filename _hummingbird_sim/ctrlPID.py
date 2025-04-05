@@ -52,7 +52,7 @@ class ctrlPID:
         print('kd_yaw: ', self.kd_yaw) 
 
         tr_roll = tr_yaw / M
-        zeta_roll = 0.999
+        zeta_roll = 0.9
         wn_roll = 0.5 * np.pi / tr_roll / np.sqrt(1 - zeta_roll**2)
         self.kp_roll = wn_roll**2 * P.J1x
         self.kd_roll = 2 * zeta_roll * wn_roll * P.J1x
@@ -88,8 +88,6 @@ class ctrlPID:
                        + (1 - self.beta) * ((theta - self.theta_d1) / self.Ts)
         self.psi_dot = self.beta * self.psi_dot \
                        + (1 - self.beta) * ((psi - self.psi_d1) / self.Ts)
-        # self.psi_dot = psidot
-        self.phi_dot = phidot
         
         force_equilibrium = P.g * (P.m1 * P.ell1 + P.m2 * P.ell2) * np.cos(theta) / P.ellT
         
@@ -97,7 +95,7 @@ class ctrlPID:
         self.integrator_theta += (P.Ts / 2) * (error_theta + self.error_theta_d1)
 
         force_unsat = self.kp_pitch * error_theta - self.kd_pitch * self.theta_dot + self.ki_pitch * self.integrator_theta
-        force = saturate(force_unsat + force_equilibrium + d, -P.force_max, P.force_max)
+        force = saturate(force_unsat + force_equilibrium - d, -P.force_max, P.force_max)
 
         # lateral control
         # outer loop / yaw
