@@ -4,9 +4,9 @@ import massParam as P
 class ctrlPD:
     def __init__(self):
         # Declare pole locations
-        zeta = 0.7
-        t_r = 1.85
-        w_n = 0.5 * np.pi / t_r / np.sqrt(1.0 - zeta**2)
+        zeta = 0.707
+        t_r = 2.0
+        w_n = 2.2 / t_r
 
 
         self.kd = (2.0 * zeta * w_n) * P.m - P.b

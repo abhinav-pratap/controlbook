@@ -5,22 +5,22 @@ import numpy as np
 from signalGenerator import signalGenerator
 from dataPlotter import dataPlotter
 from blockbeamDynamics import blockbeamDynamics
-from ctrlPID import ctrlPID
+from ctrlStateFeedback import ctrlStateFeedback
 
 r_plot = signalGenerator(amplitude=0.15, frequency=.05, y_offset=0.25)
 dynamics = blockbeamDynamics(alpha=0.0)
 
 data_plot = dataPlotter()
 animation = blockbeamAnimation()
-controller = ctrlPID()
+controller = ctrlStateFeedback()
 t = P.t_start
 
 y = dynamics.h()
 while t < P.t_end:
     t_next_plot = t + P.t_plot
     while t < t_next_plot:
-        r = r_plot.sawtooth(t)
-        u = controller.update(r, y)
+        r = r_plot.square(t)
+        u = controller.update(r, dynamics.state)
         y = dynamics.update(u)
         t += P.Ts
 

@@ -8,7 +8,7 @@ class ctrlPID:
 
         # inner loop
         zeta_theta = 0.707
-        t_r_theta = .3
+        t_r_theta = .12
         w_n_theta = 0.5 * np.pi / t_r_theta / np.sqrt(1 - zeta_theta**2)
         b = 1.0/3.0 * P.m2 * P.length**2 + P.m1 * self.z_e**2
 
@@ -22,12 +22,12 @@ class ctrlPID:
 
         # outer loop
         zeta_z = 0.707
-        t_r_z = 3
+        t_r_z = 1.2
         w_n_z = 0.5 * np.pi / t_r_z / np.sqrt(1 - zeta_z**2)
 
         self.kd_z = - 2 * zeta_z * w_n_z / P.g
         self.kp_z = - w_n_z**2 / P.g
-        self.ki_z = -0.013
+        self.ki_z = -0.1
         # PD gains
         print('kp_z: ', self.kp_z)
         print('kd_z: ', self.kd_z)
@@ -55,10 +55,11 @@ class ctrlPID:
         theta = state[1][0]
 
         e_z = z_r - z
-        self.integrator_z += (P.Ts / 2) * (e_z + self.prev_e_z)
+        self.z_dot = (2*self.sigma_z - P.Ts) / (2*self.sigma_z + P.Ts) * self.z_dot + 2. / (2 * self.sigma_z + P.Ts) * (z - self.prev_z)
+        if np.abs(self.z_dot) <= 0.1:
+            self.integrator_z += (P.Ts / 2) * (e_z + self.prev_e_z)
 
         if self.flag:
-            self.z_dot = (2*self.sigma_z - P.Ts) / (2*self.sigma_z + P.Ts) * self.z_dot + 2. / (2 * self.sigma_z + P.Ts) * (z - self.prev_z)
             theta_r = self.kp_z * e_z - self.kd_z * self.z_dot + self.ki_z * self.integrator_z
         else:
             self.e_z_dot = (2*self.sigma_z - P.Ts) / (2*self.sigma_z + P.Ts) * self.e_z_dot + 2. / (2 * self.sigma_z + P.Ts) * (e_z - self.prev_e_z)

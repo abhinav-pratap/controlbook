@@ -4,7 +4,7 @@ import numpy as np
 
 # Physical parameters of the  ballbeam known to the controller
 m1 = 0.35  # Mass of the block, kg
-m2 = 2  # mass of beam, kg
+m2 = 2.  # mass of beam, kg
 length = 0.5  # length of beam, m
 g = 9.8  # gravity at sea level, m/s^2
 
