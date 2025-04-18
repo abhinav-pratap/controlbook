@@ -27,7 +27,7 @@ class rodMassDynamics:
         # re-label states for readability
         theta = state[0][0]
         thetadot = state[1][0]
-        tau = u[0]
+        tau = u
         xdot = np.array([
             [thetadot],
             [(-self.g/self.ell)*np.cos(theta)
