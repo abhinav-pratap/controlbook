@@ -12,6 +12,8 @@ hummingbird = HummingbirdDynamics(alpha=0.1)
 controller = ctrlStateFeedbackIntegrator()
 psi_ref = SignalGenerator(amplitude=30.*np.pi/180., frequency=0.02)
 theta_ref = SignalGenerator(amplitude=15.*np.pi/180., frequency=0.05)
+theta_d = SignalGenerator(amplitude=0.5)
+psi_d = SignalGenerator(amplitude=0.01)
 
 # instantiate the simulation plots and animation
 dataPlot = DataPlotter()
@@ -25,7 +27,9 @@ while t < P.t_end:  # main simulation loop
     t_next_plot = t + P.t_plot
     while t < t_next_plot:
         r = np.array([[theta_ref.square(t)], [psi_ref.square(t)]])
-        pwms, y_ref = controller.update(r, y)
+        d_lon = theta_d.step(t)
+        d_lat = psi_d.step(t)
+        pwms, y_ref = controller.update(r, y, d_lon, d_lat)
         y = hummingbird.update(pwms)  # Propagate the dynamics
         t += P.Ts  # advance time by Ts
 
